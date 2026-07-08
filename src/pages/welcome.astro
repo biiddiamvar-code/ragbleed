@@ -1,10 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="Subscribed">
+<BaseLayout title="Welcome">
   <style>
     .page{
-      max-width:520px; margin:0 auto; padding:150px 32px 160px; text-align:left;
+      max-width:560px; margin:0 auto; padding:130px 32px 140px; text-align:left;
     }
     .eyebrow{
       font-family:'IBM Plex Mono', monospace; font-size:11px;
@@ -16,8 +16,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       font-size:clamp(28px,5vw,40px); line-height:1.15; letter-spacing:-.01em;
       margin-bottom:20px;
     }
-    .page p{ font-size:17px; line-height:1.65; color:var(--text-secondary); margin-bottom:36px; max-width:44ch; }
-
     .bleed-bar{
       height:2px; width:100%; max-width:280px;
       background:linear-gradient(to right, var(--oxblood) 0%, var(--oxblood) 40%, transparent 100%);
@@ -26,19 +24,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
     @keyframes bleedIn{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
 
-    .back{
+    .page p{ font-size:17px; line-height:1.7; color:var(--text-secondary); margin-bottom:22px; max-width:52ch; }
+    .page p strong{ color:var(--paper); font-weight:600; }
+
+    .links{ margin-top:36px; display:flex; gap:24px; flex-wrap:wrap; }
+    .links a{
       font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.06em;
       text-transform:uppercase; color:var(--text-muted); text-decoration:none;
       border-bottom:1px solid var(--redact-border); padding-bottom:2px;
     }
-    .back:hover{ color:var(--cyan); border-color:var(--cyan); }
+    .links a:hover{ color:var(--cyan); border-color:var(--cyan); }
   </style>
 
   <div class="page">
-    <span class="eyebrow">Case #000 · Subscription</span>
-    <h1>Almost there.</h1>
-<div class="bleed-bar"></div>
-<p>Check your inbox for a confirmation email — click the link there and you're on the list. The next case file gets filed straight to your inbox the day it's confirmed. No digest, no delay, no filler.</p>
-    <a href="/" class="back">← Back to Case Files</a>
+    <span class="eyebrow">Subscription confirmed</span>
+    <h1>You're in.</h1>
+    <div class="bleed-bar"></div>
+
+    <p>Here's what that actually means: one email, every time a new case file is filed — no weekly digest, no roundup, no filler. Each one covers a real, reproduced vulnerability or failure pattern in a RAG system, rated by severity, with enough technical detail to tell you if it applies to your own stack.</p>
+
+    <p><strong>No sponsor content, ever.</strong></p>
+
+    <div class="links">
+      <a href="/">← All Case Files</a>
+      <a href="/about">How cases get verified</a>
+    </div>
   </div>
 </BaseLayout>

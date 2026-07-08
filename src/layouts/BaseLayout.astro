@@ -1,0 +1,86 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{title} · RAGBleed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1013;
+    --paper:#F2EEE3;
+    --paper-text:#2A241C;
+    --paper-muted:#6B6355;
+    --text-secondary:#B7B1A2;
+    --text-muted:#9a9488;
+    --oxblood:#B8394B;
+    --redact:#1A1D22;
+    --redact-border:#33373F;
+    --cyan:#4FD0C0;
+    --amber:#E0A94D;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html, body{ background:var(--ink); }
+  #page{ background:var(--ink); }
+  body{
+    color:var(--paper);
+    font-family:'Source Serif 4', serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--cyan); outline-offset:2px;}
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:var(--ink); border-bottom:1px solid var(--redact-border);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 32px;
+  }
+  .logo{ font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:16px; letter-spacing:.04em; text-decoration:none; }
+  .logo .dot{ color:var(--oxblood); }
+  .btn{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.08em;
+    text-transform:uppercase; padding:9px 18px; border:1px solid var(--oxblood);
+    color:var(--paper); background:none; cursor:pointer; text-decoration:none;
+    transition:background 150ms ease, color 150ms ease; display:inline-block;
+  }
+  .btn:hover{ background:var(--oxblood); color:var(--paper); }
+
+  .badge{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.06em;
+    text-transform:uppercase; padding:4px 8px; border:1px solid currentColor;
+  }
+  .badge-dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .badge.low{ color:var(--cyan); }
+  .badge.medium{ color:var(--amber); }
+  .badge.high{ color:var(--oxblood); }
+
+  footer.site{
+    padding:32px; text-align:center; font-family:'IBM Plex Mono', monospace;
+    font-size:11px; color:var(--text-muted); letter-spacing:.04em;
+  }
+</style>
+<slot name="head" />
+</head>
+<body>
+<div id="page">
+  <header class="site">
+    <a href="/" class="logo">RAGBLEED<span class="dot">.</span></a>
+    <a href="/subscribe" class="btn">Subscribe</a>
+  </header>
+
+  <slot />
+
+  <footer class="site">RAGBLEED — INCIDENT REPORTS FOR RETRIEVAL-AUGMENTED SYSTEMS</footer>
+</div>
+</body>
+</html>

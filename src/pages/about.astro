@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Methodology">
+  <style>
+    .page{ max-width:680px; margin:0 auto; padding:90px 32px 110px; }
+    .eyebrow{
+      font-family:'IBM Plex Mono', monospace; font-size:11px;
+      letter-spacing:.16em; text-transform:uppercase; color:var(--cyan);
+      margin-bottom:16px; display:block;
+    }
+    .page h1{
+      font-family:'IBM Plex Mono', monospace; font-weight:700;
+      font-size:clamp(28px,4.6vw,40px); line-height:1.15; letter-spacing:-.01em;
+      margin-bottom:36px;
+    }
+    .page h2{
+      font-family:'IBM Plex Mono', monospace; font-size:13px; letter-spacing:.1em;
+      text-transform:uppercase; color:var(--oxblood); margin:44px 0 16px;
+    }
+    .page h2:first-of-type{ margin-top:0; }
+    .page p{ font-size:18px; line-height:1.75; color:var(--text-secondary); margin-bottom:20px; }
+    .page p strong{ color:var(--paper); font-weight:600; }
+
+    .scale{ border:1px solid var(--redact-border); margin:28px 0; }
+    .scale-row{
+      display:grid; grid-template-columns:110px 1fr; gap:16px;
+      padding:16px 20px; border-bottom:1px solid var(--redact-border);
+      font-size:16px; align-items:baseline;
+    }
+    .scale-row:last-child{ border-bottom:none; }
+    .scale-row span:last-child{ color:var(--text-secondary); }
+
+    .contact-note{
+      font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--text-muted);
+      border-top:1px solid var(--redact-border); padding-top:24px; margin-top:50px;
+    }
+    .contact-note a{ color:var(--cyan); text-decoration:none; }
+    .contact-note a:hover{ text-decoration:underline; }
+  </style>
+
+  <div class="page">
+    <span class="eyebrow">Methodology</span>
+    <h1>How a case file gets filed.</h1>
+
+    <h2>Sourcing</h2>
+    <p>Cases come from three places: security disclosures already made public but never widely reported, first-hand findings from engineers who reach out to us directly, and our own testing against open-source RAG frameworks and reference architectures. <strong>We do not test production systems we don't have permission to test.</strong></p>
+
+    <h2>Verification</h2>
+    <p>Before a case is filed, we reproduce it — either directly, or against a minimal environment that mirrors the reported configuration. If we can't reproduce a finding, it doesn't get published as a confirmed case; it stays in the backlog until it can be verified or ruled out.</p>
+
+    <h2>Severity Rating</h2>
+    <p>Every case is rated on what it exposes and how easily, not on how alarming it sounds.</p>
+    <div class="scale">
+      <div class="scale-row">
+        <span class="badge low"><span class="badge-dot"></span>Low</span>
+        <span>Requires unusual configuration or privileged access to trigger; limited or non-sensitive data exposed.</span>
+      </div>
+      <div class="scale-row">
+        <span class="badge medium"><span class="badge-dot"></span>Medium</span>
+        <span>Exploitable under common configurations; exposes internal but not highly sensitive data.</span>
+      </div>
+      <div class="scale-row">
+        <span class="badge high"><span class="badge-dot"></span>High</span>
+        <span>Exploitable under default or widely-deployed configurations; exposes sensitive, private, or cross-tenant data.</span>
+      </div>
+    </div>
+
+    <h2>Disclosure</h2>
+    <p>Where a case involves a specific vendor or open-source project, we notify the maintainers before publication and give them a chance to respond, patch, or comment. A case is marked <strong>disclosed</strong> once that window has passed, regardless of whether a fix shipped.</p>
+
+    <h2>Corrections</h2>
+    <p>If a filed case turns out to be wrong, outdated, or resolved, we update it in place and note the change with a date — we don't quietly edit history.</p>
+
+    <div class="contact-note">Have a finding to report, or something to correct? <a href="mailto:tips@ragbleed.com">tips@ragbleed.com</a></div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,142 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const cases = await getCollection('cases');
+  return cases.map((c) => ({
+    params: { slug: c.slug },
+    props: { entry: c },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const d = entry.data;
+
+const relatedEntries = await Promise.all(
+  d.related.map(async (caseId: string) => {
+    const all = await getCollection('cases');
+    return all.find((c) => c.data.caseId === caseId);
+  })
+);
+const related = relatedEntries.filter(Boolean).slice(0, 3);
+---
+<BaseLayout title={`Case #${d.caseId} — ${d.title}`}>
+  <style>
+    .back-link{
+      max-width:760px; margin:0 auto; padding:28px 32px 0;
+      font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.06em;
+      text-transform:uppercase; color:var(--text-muted); text-decoration:none;
+      display:block;
+    }
+    .back-link:hover{ color:var(--cyan); }
+
+    .stamp{ max-width:760px; margin:0 auto; padding:26px 32px 40px; }
+    .stamp-meta{
+      display:flex; flex-wrap:wrap; gap:16px; align-items:center;
+      font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--text-muted);
+      margin-bottom:18px;
+    }
+    .stamp h1{
+      font-family:'IBM Plex Mono', monospace; font-weight:700;
+      font-size:clamp(26px,4.4vw,40px); line-height:1.15; letter-spacing:-.01em;
+      margin-bottom:16px;
+    }
+    .bleed-bar{
+      height:2px; width:100%; max-width:340px;
+      background:linear-gradient(to right, var(--oxblood) 0%, var(--oxblood) 40%, transparent 100%);
+      transform-origin:left; animation:bleedIn 900ms ease-out both;
+    }
+    @keyframes bleedIn{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+
+    .content-wrap{ background:var(--paper); }
+    .content{
+      max-width:760px; margin:0 auto; padding:56px 32px 64px;
+      color:var(--paper-text); font-size:18px; line-height:1.75;
+    }
+    .content :global(p){ margin-bottom:22px; }
+    .content :global(h2){
+      font-family:'IBM Plex Mono', monospace; font-size:14px; letter-spacing:.1em;
+      text-transform:uppercase; color:var(--oxblood); margin:44px 0 18px;
+    }
+    .content :global(h2:first-child){ margin-top:0; }
+    .content :global(code){
+      font-family:'IBM Plex Mono', monospace; font-size:0.85em;
+      background:rgba(184,57,75,0.08); padding:1px 5px;
+    }
+    .content :global(blockquote){
+      border-left:3px solid var(--oxblood); padding:4px 0 4px 22px;
+      margin:30px 0; font-style:italic; color:var(--paper-muted); font-size:18px;
+    }
+    .content :global(pre){
+      background:var(--ink); border:1px solid var(--redact-border);
+      color:var(--cyan); font-family:'IBM Plex Mono', monospace; font-size:13px;
+      line-height:1.7; padding:20px 22px; overflow-x:auto; margin:30px 0;
+    }
+    .content :global(pre code){ background:none; padding:0; color:inherit; }
+
+    .meta-note{
+      font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--paper-muted);
+      border-top:1px solid #D8D2C3; padding-top:20px; margin-top:44px;
+    }
+
+    .related{ max-width:900px; margin:0 auto; padding:70px 32px 100px; }
+    .related h2{
+      font-family:'IBM Plex Mono', monospace; font-size:13px; letter-spacing:.12em;
+      text-transform:uppercase; color:var(--text-muted); border-bottom:1px solid var(--redact-border);
+      padding-bottom:16px; margin-bottom:24px;
+    }
+    .related-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1px; background:var(--redact-border); }
+    .related-card{
+      background:var(--ink); padding:26px 22px; cursor:pointer; transition:background 150ms ease;
+      text-decoration:none; display:block;
+    }
+    .related-card:hover{ background:rgba(184,57,75,0.08); }
+    .related-card .rc-top{
+      display:flex; justify-content:space-between; align-items:center;
+      font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--text-muted); margin-bottom:14px;
+    }
+    .related-card .rc-title{ font-size:16px; color:var(--text-secondary); line-height:1.4; }
+    .related-card:hover .rc-title{ color:var(--paper); }
+  </style>
+
+  <a href="/" class="back-link">← All Case Files</a>
+
+  <div class="stamp">
+    <div class="stamp-meta">
+      <span class={`badge ${d.severity}`}><span class="badge-dot"></span>{d.severity.charAt(0).toUpperCase() + d.severity.slice(1)}</span>
+      <span>CASE #{d.caseId}</span>
+      <span>·</span>
+      <span>FILED {d.filedDisplay.toUpperCase()}</span>
+      <span>·</span>
+      <span>{d.readTime.toUpperCase()}</span>
+    </div>
+    <h1>{d.title}</h1>
+    <div class="bleed-bar"></div>
+  </div>
+
+  <div class="content-wrap">
+    <div class="content">
+      <Content />
+      <div class="meta-note">FIRST OBSERVED: {d.firstObserved.toUpperCase()} &nbsp;·&nbsp; STATUS: {d.status.toUpperCase()}</div>
+    </div>
+  </div>
+
+  {related.length > 0 && (
+    <div class="related">
+      <h2>Related Case Files</h2>
+      <div class="related-grid">
+        {related.map((r) => (
+          <a href={`/case/${r!.slug}`} class="related-card">
+            <div class="rc-top">
+              <span>#{r!.data.caseId}</span>
+              <span class={`badge ${r!.data.severity}`}><span class="badge-dot"></span>{r!.data.severity.charAt(0).toUpperCase() + r!.data.severity.slice(1)}</span>
+            </div>
+            <div class="rc-title">{r!.data.title}</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
+</BaseLayout>

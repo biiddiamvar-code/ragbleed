@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Subscribe">
+  <style>
+    .page{ max-width:520px; margin:0 auto; padding:130px 32px 140px; text-align:left; }
+    .eyebrow{
+      font-family:'IBM Plex Mono', monospace; font-size:11px;
+      letter-spacing:.16em; text-transform:uppercase; color:var(--cyan);
+      margin-bottom:16px; display:block;
+    }
+    .page h1{
+      font-family:'IBM Plex Mono', monospace; font-weight:700;
+      font-size:clamp(28px,5vw,42px); line-height:1.15; letter-spacing:-.01em;
+      margin-bottom:20px;
+    }
+    .page p{ font-size:17px; line-height:1.65; color:var(--text-secondary); margin-bottom:36px; max-width:44ch; }
+
+    .form-row{ display:flex; gap:0; }
+    .form-row input{
+      flex:1; background:var(--redact); border:1px solid var(--redact-border); border-right:none;
+      color:var(--paper); padding:15px 16px; font-family:'Source Serif 4', serif; font-size:16px;
+    }
+    .form-row input::placeholder{ color:var(--text-muted); }
+    .form-row button{
+      background:var(--oxblood); border:1px solid var(--oxblood); color:var(--paper);
+      font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.06em;
+      text-transform:uppercase; padding:0 24px; cursor:pointer; transition:background 150ms ease;
+      white-space:nowrap;
+    }
+    .form-row button:hover{ background:#9C2E3D; }
+
+    .fine-print{
+      font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--text-muted);
+      margin-top:18px; line-height:1.6;
+    }
+
+    .what-you-get{ margin-top:56px; border-top:1px solid var(--redact-border); padding-top:32px; }
+    .what-you-get h2{
+      font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.1em;
+      text-transform:uppercase; color:var(--text-muted); margin-bottom:18px;
+    }
+    .wyg-row{ display:flex; gap:14px; margin-bottom:14px; font-size:15px; color:var(--text-secondary); line-height:1.6; }
+    .wyg-row .mark{ font-family:'IBM Plex Mono', monospace; color:var(--oxblood); flex-shrink:0; }
+
+    @media (max-width:480px){
+      .form-row{ flex-direction:column; }
+      .form-row input{ border-right:1px solid var(--redact-border); border-bottom:none; }
+      .form-row button{ padding:14px; }
+    }
+  </style>
+
+  <div class="page">
+    <span class="eyebrow">Subscribe</span>
+    <h1>Get your first case file.</h1>
+    <p>One email per finding, sent the day it's filed. No weekly digest, no roundup, no filler.</p>
+
+    <form class="form-row" method="post" action="https://buttondown.com/api/emails/embed-subscribe/ragbleed">
+      <input type="email" name="email" placeholder="you@company.com" aria-label="Email address" required>
+      <button type="submit">Subscribe</button>
+    </form>
+    <div class="fine-print">NO SPAM · UNSUBSCRIBE ANYTIME · ~1 EMAIL / WEEK</div>
+
+    <div class="what-you-get">
+      <h2>What you get</h2>
+      <div class="wyg-row"><span class="mark">→</span><span>The full case file the moment it's confirmed — not a summary.</span></div>
+      <div class="wyg-row"><span class="mark">→</span><span>Severity rating and affected-system detail, so you can tell if it applies to you.</span></div>
+      <div class="wyg-row"><span class="mark">→</span><span>Nothing else. No sponsor content, no unrelated product news.</span></div>
+    </div>
+  </div>
+</BaseLayout>

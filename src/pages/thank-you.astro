@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Subscribed">
+  <style>
+    .page{
+      max-width:520px; margin:0 auto; padding:150px 32px 160px; text-align:left;
+    }
+    .eyebrow{
+      font-family:'IBM Plex Mono', monospace; font-size:11px;
+      letter-spacing:.16em; text-transform:uppercase; color:var(--cyan);
+      margin-bottom:16px; display:block;
+    }
+    .page h1{
+      font-family:'IBM Plex Mono', monospace; font-weight:700;
+      font-size:clamp(28px,5vw,40px); line-height:1.15; letter-spacing:-.01em;
+      margin-bottom:20px;
+    }
+    .page p{ font-size:17px; line-height:1.65; color:var(--text-secondary); margin-bottom:36px; max-width:44ch; }
+
+    .bleed-bar{
+      height:2px; width:100%; max-width:280px;
+      background:linear-gradient(to right, var(--oxblood) 0%, var(--oxblood) 40%, transparent 100%);
+      transform-origin:left; animation:bleedIn 900ms ease-out both;
+      margin-bottom:32px;
+    }
+    @keyframes bleedIn{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+
+    .back{
+      font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.06em;
+      text-transform:uppercase; color:var(--text-muted); text-decoration:none;
+      border-bottom:1px solid var(--redact-border); padding-bottom:2px;
+    }
+    .back:hover{ color:var(--cyan); border-color:var(--cyan); }
+  </style>
+
+  <div class="page">
+    <span class="eyebrow">Case #000 · Subscription</span>
+    <h1>Confirmed.</h1>
+    <div class="bleed-bar"></div>
+    <p>You're on the list. The next case file gets filed straight to your inbox the day it's confirmed — no digest, no delay, no filler.</p>
+    <a href="/" class="back">← Back to Case Files</a>
+  </div>
+</BaseLayout>

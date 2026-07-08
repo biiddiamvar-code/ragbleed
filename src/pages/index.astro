@@ -99,10 +99,10 @@ const sorted = allCases.sort((a, b) => b.data.filed.localeCompare(a.data.filed))
     <div class="newsletter-inner">
       <h2>Get the next case file first.</h2>
       <p>One email per finding. No digest, no filler — filed the day it's confirmed.</p>
-      <div class="form-row">
-        <input type="email" placeholder="you@company.com" aria-label="Email address">
-        <button type="button">Subscribe</button>
-      </div>
+      <form class="form-row" method="post" action="https://buttondown.com/api/emails/embed-subscribe/ragbleed">
+  <input type="email" name="email" placeholder="you@company.com" aria-label="Email address" required>
+  <button type="submit">Subscribe</button>
+</form>
       <p class="form-note">FILED CASES: {sorted.length} · SUBSCRIBERS SEE THEM FIRST</p>
     </div>
   </div>

@@ -68,6 +68,9 @@ const { title } = Astro.props;
     padding:32px; text-align:center; font-family:'IBM Plex Mono', monospace;
     font-size:11px; color:var(--text-muted); letter-spacing:.04em;
   }
+footer.site .copyright{
+  margin-top:8px; color:var(--text-muted); opacity:0.6;
+}
 </style>
 <slot name="head" />
 </head>
@@ -80,7 +83,10 @@ const { title } = Astro.props;
 
   <slot />
 
-  <footer class="site">RAGBLEED — INCIDENT REPORTS FOR RETRIEVAL-AUGMENTED SYSTEMS</footer>
+  <footer class="site">
+    RAGBLEED — INCIDENT REPORTS FOR RETRIEVAL-AUGMENTED SYSTEMS
+    <div class="copyright">© 2026 ERVIX LABS</div>
+  </footer>
 </div>
 </body>
 </html>

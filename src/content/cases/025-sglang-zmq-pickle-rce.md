@@ -6,8 +6,8 @@ filedDisplay: "20 Mar 2026"
 firstObserved: "12 Mar 2026"
 severity: high
 category: "Configuration / default-settings failure"
-status: "Disclosed, patch guidance pending"
-affectedSystems: "sglang, ZMQ transport layer for disaggregated serving (all versions as of writing)"
+status: "Patched"
+affectedSystems: "sglang, ZMQ transport layer for disaggregated serving (versions prior to 0.5.10)"
 cve: "CVE-2026-3059 / CVE-2026-3060"
 readTime: "5 min read"
 related: ["021", "024", "002"]
@@ -35,3 +35,5 @@ That last detail is worth filing on its own. A CVE existing doesn't mean a fix e
 ## Mitigation
 
 No patch is available at time of writing. If you operate sglang in disaggregated-serving mode, do not expose the ZMQ transport ports beyond a network you fully trust and control — treat this the same as you would an admin interface with no login, because functionally that's what it is. If your deployment doesn't need disaggregated serving, disable it. Track sglang's repository directly for a fix rather than relying on vulnerability feeds alone, since the gap between "CVE assigned" and "fix shipped" is exactly the gap this case sits in.
+
+**Update, 24 Aug 2026:** sglang 0.5.10 addresses CVE-2026-3059 and CVE-2026-3060, per CERT/CC Vulnerability Note VU#665416. Deployments should upgrade to 0.5.10 or later; instances still on earlier versions remain exposed via the unauthenticated ZMQ transport described above.

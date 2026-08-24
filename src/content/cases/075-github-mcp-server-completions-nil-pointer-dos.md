@@ -6,8 +6,8 @@ filedDisplay: "19 Aug 2026"
 firstObserved: "20 Jul 2026"
 severity: high
 category: "Denial of service / resource exhaustion"
-status: "Disclosed, patch guidance pending"
-affectedSystems: "github-mcp-server (gomod, <=0.33.0 and latest main; no patched version at time of writing)"
+status: "Patched"
+affectedSystems: "github-mcp-server (gomod, <1.1.0)"
 cve: "CVE-2026-47427 (GHSA-w4q6-qw23-4rg7)"
 readTime: "4 min read"
 related: ["029", "061", "074"]
@@ -36,3 +36,5 @@ The report was filed in February 2026 and went unacknowledged through a follow-u
 ## Mitigation
 
 No upgrade path exists yet. Operators running github-mcp-server in HTTP mode — particularly shared, multi-user deployments such as an organization's managed Copilot MCP endpoint — should restrict network reachability to trusted clients and monitor for process restarts, since a single crafted message from any client that can reach the port takes the whole server down regardless of that client's authorization. This site rates the mechanism high, in line with the advisory's own CVSS 7.5 rather than below it as with narrower single-worker DoS bugs elsewhere in this database (see case 029): a crash here is not scoped to one request or one worker that recovers on its own — it is a full, unauthenticated process kill, reachable pre-auth, against a component increasingly deployed as a shared endpoint serving many users at once. The immediate fix is a nil check; the durable fix is treating every field of an externally supplied MCP request as untrusted and absent until proven otherwise, since a protocol handler that panics on a missing optional field will keep finding new fields to panic on.
+
+**Update, 24 Aug 2026:** Fixed in github-mcp-server 1.1.0, which adds the missing nil check to the `completion/complete` handler. Deployments should upgrade from any version before 1.1.0.

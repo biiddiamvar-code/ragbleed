@@ -1,0 +1,36 @@
+---
+caseId: "066"
+title: "vLLM's completions endpoint let one request fan out into an unbounded number of engine subrequests"
+filed: "2026-08-14"
+filedDisplay: "14 Aug 2026"
+firstObserved: "13 Aug 2026"
+severity: medium
+category: "Denial of service / resource exhaustion"
+status: "Patched"
+affectedSystems: "vLLM (>=0.19.0, <0.26.0)"
+cve: "CVE-2026-73559"
+readTime: "3 min read"
+related: ["029", "021", "048"]
+---
+
+## Summary
+
+vLLM's OpenAI-compatible `/v1/completions` endpoint accepts `prompt` as either a single string or a list of prompts, a documented feature meant to let one HTTP request batch several completions together. The request model enforced no upper bound on how many prompts that list could contain. The serving path turned every element into its own engine input, generator, and response slot before any request-count budget was checked — so the size of the list, not any server-side limit, decided how many backend subrequests a single call produced. Fixed in 0.26.0.
+
+## What was observed
+
+The `/v1/completions` request schema accepts `prompt` as a list of text prompts or a list of token-id prompts, with no outer bound on list length. Downstream, the serving path processed that list by creating a separate engine generator per element, merging the generators, and allocating a dedicated response slot for each one — work proportional to list length, performed before vLLM's aggregate request-count accounting had a chance to apply any limit.
+
+```
+# /v1/completions request model — prompt: list[str] | list[list[int]]
+# no bound on list length enforced before per-element engine work begins:
+#   1 engine generator created per prompt element
+#   1 response slot allocated per prompt element
+# request count budget checked too late to matter
+```
+
+An API client with access to the completions endpoint could therefore submit one request and have it expand into an attacker-chosen number of backend subrequests, consuming engine capacity — generators, response slots, and the scheduling work that goes with them — disproportionate to the single request that produced it. The GitLab and GitHub advisories rate the issue CWE-400 (Uncontrolled Resource Consumption), CVSS 6.5 medium: network-reachable, low complexity, but requiring some level of privilege to reach the endpoint and bounded to an availability impact rather than any confidentiality or integrity loss.
+
+## Mitigation
+
+Upgrade to vLLM 0.26.0 or later, which adds an outer bound on completion prompt-list length ahead of the per-element engine work. Where upgrading isn't immediate, front the completions endpoint with a proxy or gateway that caps request batch size independently of vLLM's own accounting, and treat any documented "batch this in one call" API parameter as an unbounded-fan-out risk until proven otherwise — the same class of bug this site has already logged once against vLLM's structured-output compiler (case 029): a legitimate feature accepting caller-controlled size or complexity with the safety check applied after the expensive work, not before it.

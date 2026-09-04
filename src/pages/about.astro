@@ -21,15 +21,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .page h2:first-of-type{ margin-top:0; }
     .page p{ font-size:18px; line-height:1.75; color:var(--text-secondary); margin-bottom:20px; }
     .page p strong{ color:var(--paper); font-weight:600; }
+    .page code{ font-family:'IBM Plex Mono', monospace; font-size:0.85em; background:rgba(184,57,75,0.08); padding:1px 5px; color:var(--paper); }
 
     .scale{ border:1px solid var(--redact-border); margin:28px 0; }
     .scale-row{
-      display:grid; grid-template-columns:110px 1fr; gap:16px;
+      display:grid; grid-template-columns:80px 1fr; gap:16px;
       padding:16px 20px; border-bottom:1px solid var(--redact-border);
       font-size:16px; align-items:baseline;
     }
     .scale-row:last-child{ border-bottom:none; }
     .scale-row span:last-child{ color:var(--text-secondary); }
+
+    .badge{
+      display:inline-flex; align-items:center; gap:6px;
+      font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.06em;
+      text-transform:uppercase; padding:4px 8px; border:1px solid currentColor;
+      width:fit-content;
+    }
+    .badge-dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
+    .badge.low{ color:var(--cyan); }
+    .badge.medium{ color:var(--amber); }
+    .badge.high{ color:var(--oxblood); }
 
     .contact-note{
       font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--text-muted);
@@ -71,6 +83,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     <h2>Corrections</h2>
     <p>If a filed case turns out to be wrong, outdated, or resolved, we update it in place and note the change with a date — we don't quietly edit history.</p>
+
+    <h2>API</h2>
+    <p>Every case is available as free, public JSON — no key, no signup required. Useful for feeding a Slack bot, a security dashboard, or your own tooling.</p>
+    <div class="scale">
+      <div class="scale-row">
+        <span class="badge low">GET</span>
+        <span><code>/api/cases.json</code> — all cases, newest first</span>
+      </div>
+      <div class="scale-row">
+        <span class="badge low">GET</span>
+        <span><code>/api/cases/:caseId.json</code> — one case, full detail (e.g. <code>/api/cases/025.json</code>)</span>
+      </div>
+      <div class="scale-row">
+        <span class="badge low">GET</span>
+        <span><code>/api/latest.json</code> — most recent 5 cases, lightweight</span>
+      </div>
+    </div>
+    <p>Want the latest cases on your own site? Drop this in:</p>
+    <pre style="background:var(--redact);border:1px solid var(--redact-border);color:var(--cyan);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:16px 18px;overflow-x:auto;margin:20px 0 30px;">&lt;div id="ragbleed-widget"&gt;&lt;/div&gt;
+&lt;script src="https://ragbleed.com/widget.js"&gt;&lt;/script&gt;</pre>
 
     <div class="contact-note">Have a finding to report, or something to correct? <a href="mailto:tips@ragbleed.com">tips@ragbleed.com</a></div>
   </div>

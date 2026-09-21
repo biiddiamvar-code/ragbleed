@@ -6,9 +6,9 @@ filedDisplay: "07 Aug 2026"
 firstObserved: "21 Jul 2026"
 severity: high
 category: "Prompt injection (direct or indirect)"
-status: "Disclosed, patch guidance pending"
-affectedSystems: "Microsoft's official Azure DevOps MCP server (github.com/microsoft/azure-devops-mcp), pull-request-description retrieval tool; all versions as of disclosure on 21 Jul 2026"
-cve: "No CVE assigned; disclosed by Manifold Security, acknowledged and triaged by Microsoft Security Response Center; no fix shipped as of 05 Aug 2026"
+status: "Patched"
+affectedSystems: "Microsoft's official Azure DevOps MCP server (github.com/microsoft/azure-devops-mcp), pull-request-description retrieval tool; versions prior to 2.10.0 (21 Jul 2026 – 09 Sep 2026)"
+cve: "No CVE assigned; disclosed by Manifold Security, acknowledged and triaged by Microsoft Security Response Center; fixed in v2.10.0"
 readTime: "5 min read"
 related: ["033", "014", "016"]
 ---
@@ -40,3 +40,5 @@ This is a confused-deputy failure: the agent, carrying the reviewer's authority,
 ## Mitigation
 
 No patch has shipped; Microsoft has acknowledged the report through MSRC but the PR-description tool has not yet received the spotlighting treatment applied elsewhere in the same server. Until it does, treat any Azure DevOps MCP-connected agent's PR-review capability as exposed to indirect prompt injection from any contributor who can open a pull request, and restrict which agents have write-capable tools (pipeline triggers, wiki access, commenting) available during PR review specifically. More generally: apply prompt-injection guardrails consistently across every tool an MCP server exposes, not just the ones a threat model happened to consider first — an inconsistently applied defense leaves exactly the gap this bug walked through. Any MCP integration exhibiting Simon Willison's "lethal trifecta" — access to private data, exposure to content an outside party can write, and a channel to send data back out — needs this audited tool-by-tool, not defended at the platform's edge alone; case 033's Sentry MCP disclosure is the same pattern with a different entry point.
+
+**Update, 21 Sep 2026:** Microsoft shipped v2.10.0 (09 Sep 2026), which extends the spotlighting delimiter defense to `repo_get_pull_request_by_id` — the exact gap this case describes. Pipeline and wiki tools had already received the same treatment; PR descriptions did not until this release. Deployments should update to 2.10.0 or later.

@@ -6,9 +6,9 @@ filedDisplay: "27 Aug 2026"
 firstObserved: "25 Aug 2026"
 severity: high
 category: "Configuration / default-settings failure"
-status: "Disclosed, patch guidance pending"
-affectedSystems: "NVIDIA NemoClaw, Windows-host and WSL/Docker Desktop configuration paths (non-WSL macOS/Linux fixed in v0.0.35); Ollama local inference backend"
-cve: "No CVE assigned; reported directly to NVIDIA PSIRT by Oasis Security, no CVE requested"
+status: "Patched"
+affectedSystems: "NVIDIA NemoClaw, Windows-host and WSL/Docker Desktop configuration paths (non-WSL macOS/Linux fixed in v0.0.35; Windows-host/WSL path fixed in v0.0.121); Ollama local inference backend"
+cve: "No CVE assigned; reported directly to NVIDIA PSIRT by Oasis Security, no CVE requested; fixed in v0.0.121"
 readTime: "5 min read"
 related: ["054", "020", "035"]
 ---
@@ -43,3 +43,5 @@ NemoClaw introduced a bind-probe default in v0.0.106 (August 10, 2026) that refu
 ## Mitigation
 
 Set `OLLAMA_HOST=127.0.0.1:<port>` on the Ollama service directly rather than relying on NemoClaw's platform defaults, and route container access through an explicit token-gated proxy instead of a wide-open bind. Where the Windows-host or WSL path must be used, keep the host off networks reachable by an untrusted browser tab, since the rebinding attack runs from the browser already present on the host and does not require inbound network exposure. Operators running any locally-hosted inference backend should periodically diff the chat template returned by `/api/show` against a known-good copy — NemoClaw does not do this today, querying that endpoint only for context length and tool-calling capability, which means a poisoned template currently has no built-in integrity check anywhere in the stack watching for it.
+
+**Update, 21 Sep 2026:** NVIDIA shipped v0.0.121 (08 Sep 2026), fixing the Windows-host DNS-rebinding gap by keeping Ollama traffic inside Docker Desktop's verified network context instead of the wide-open bind, and restoring prior binding/process state if the fix's own transaction fails. Deployments on the Windows-host or WSL path should update to 0.0.121 or later.

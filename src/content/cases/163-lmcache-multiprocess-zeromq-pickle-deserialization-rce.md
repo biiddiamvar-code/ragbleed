@@ -6,7 +6,7 @@ filedDisplay: "12 Oct 2026"
 firstObserved: "07 Oct 2026"
 severity: medium
 category: "Configuration / default-settings failure"
-status: "Disclosed, patch guidance pending"
+status: "Patched"
 affectedSystems: "LMCache multiprocess (distributed) mode (0.3.9 through 0.5.5, release candidates up to 0.5.6rc3; no fixed release at disclosure)"
 cve: "CVE-2026-105192 (JFrog advisory JFSA-2026-001694382)"
 readTime: "3 min read"
@@ -35,3 +35,5 @@ The transport bound to localhost by default. Exposure required a routable addres
 ## Mitigation
 
 No patched version was available at disclosure; check the LMCache releases for a fix before relying on any version. Until then, keep the default localhost binding, avoid routable `--host` values, and restrict port 5555 to the cluster with firewall rules. Network isolation reduces exposure but does not remove the flaw. JFrog recommends replacing pickle-based network decoding with a safe format and authenticating the transport with CURVE or per-message HMAC. The same pattern appears in other inference-stack components: a cache or scheduler coordination channel treated as internal is an unauthenticated deserialization endpoint once it leaves loopback.
+
+**Update, 02 Nov 2026:** LMCache released version 0.5.6 as the fix for CVE-2026-105192, replacing pickle decoding on the multiprocess transport with a typed message format (advisory GHSA-w5f2-9q9c-ff4h). Because the wire format changed, workers and servers had to be upgraded together.

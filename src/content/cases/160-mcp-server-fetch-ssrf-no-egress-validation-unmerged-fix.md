@@ -6,7 +6,7 @@ filedDisplay: "10 Oct 2026"
 firstObserved: "02 Oct 2026"
 severity: medium
 category: "Configuration / default-settings failure"
-status: "Disclosed, patch guidance pending"
+status: "Patched"
 affectedSystems: "mcp-server-fetch and mcp-server-everything (modelcontextprotocol/servers, versions 2026.6.0 through 2026.6.4); no released fix at time of writing"
 cve: "CVE-2026-104120 (VulDB VDB-412764, CWE-918, CNA: VulDB)"
 readTime: "3 min read"
@@ -38,5 +38,7 @@ The rubric rating is medium. The server typically runs as a local stdio process,
 ## Mitigation
 
 No released fix was identified. Until one ships, disable the fetch tool for agents that process untrusted prompts or retrieved content, or run the server behind an egress proxy that resolves destinations itself and blocks private, loopback, link-local, and metadata ranges at the network layer. Require IMDSv2 or equivalent metadata protections on hosts running agent tooling. Track pull request #4890 for the upstream resolution, and treat any default-off outcome as a configuration requirement for operators.
+
+**Update, 16 Nov 2026:** Pull request #4890 was closed unmerged on 05 Oct 2026 as superseded by pull request #5033, which merged the same day on the `v2/main` line. The fix refuses any request, including redirect hops and robots.txt fetches, whose host resolves to a loopback, private, link-local, or other non-globally-routable address, and adds an `--allow-private-ips` flag to disable the guard. It shipped in `mcp-server-fetch` 2026.10.10 on PyPI. The guard is on by default; operators who relied on fetching internal hosts must now opt in explicitly. The status of `mcp-server-everything` was not separately confirmed.
 
 A fetch tool that validates nothing is a proxy to every address the host can reach.
